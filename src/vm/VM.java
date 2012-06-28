@@ -68,9 +68,11 @@ public class VM {
 		instruction = new Instruction("loadindm", (byte)0x32, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
+		instruction = new Instruction("loadf", (byte)0x42, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
 
 		
-		instruction = new Instruction("stores", (byte)0x13, (byte)2);
+		instruction = new Instruction("stores", (byte)0x03, (byte)2);
 		instructions.put(instruction.getOpcode(), instruction);
 		
 		instruction = new Instruction("storem", (byte)0x13, (byte)4);
@@ -95,25 +97,25 @@ public class VM {
 		instruction = new Instruction("jmp", (byte)0x15, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpz", (byte)0x45, (byte)0);
+		instruction = new Instruction("jmpz", (byte)0x35, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpnz", (byte)0x55, (byte)0);
+		instruction = new Instruction("jmpnz", (byte)0xD5, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpgt", (byte)0x85, (byte)0);
+		instruction = new Instruction("jmpgt", (byte)0x45, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpl", (byte)0x95, (byte)0);
+		instruction = new Instruction("jmpl", (byte)0xC5, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpgte", (byte)0xC5, (byte)0);
+		instruction = new Instruction("jmpgte", (byte)0x65, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpnle", (byte)0x45, (byte)0);
+		instruction = new Instruction("jmpleq", (byte)0x25, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpnleeq", (byte)0x65, (byte)0);
+		instruction = new Instruction("jmpnleq", (byte)0xA5, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
 		

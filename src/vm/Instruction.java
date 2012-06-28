@@ -312,7 +312,8 @@ public class Instruction {
 	private void nop(Process process) {
 	}
 	
-	private void jmp(Process process) {		
+	private void jmp(Process process) {
+
 		int sp = process.getSp();
 		byte flags = process.getFlags();
 		byte[] stack = process.getStack();
@@ -320,30 +321,33 @@ public class Instruction {
 		int newPC =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp]);
 		boolean shouldJump = false;
 		
-		if((getOpcode() & 0x1) != 0) {
+
+		if((getOpcode() & 0xF) == 0x1) { // unconditional jump
 			shouldJump = true;
 		} else {
-			if((getOpcode() & 0x8) != 0 && (flags &= 0x2) != 0) {
-				shouldJump = true;
-			}
-			
-			if((getOpcode() & 0x8) == 0 && (flags &= 0x2) == 0) {
-				shouldJump = true;
-			}
-			
-			if((getOpcode() & 0x4) != 0 && (flags &= 0x1) != 0) {
-				shouldJump = true;
-			}
-			
-			if((getOpcode() & 0x4) == 0 && (flags &= 0x1) == 0) {
-				shouldJump = true;
-			}
-			
-			if((getOpcode() & 0x2) != 0) {
-				shouldJump = !shouldJump;
+			if((getOpcode() & 0x1) != 0) {	// conditional jump - equal only
+				if((getOpcode() & 0x2) != 0 && (flags & 0x1) != 0) {
+					shouldJump = true;
+				}
+			} else {	// conditional jump - combined equal and overflow flag
+				if((getOpcode() & 0x4) != 0 && (flags & 0x2) != 0) { // greater
+					shouldJump = true;
+				}
+				
+				if((getOpcode() & 0x4) == 0 && (flags & 0x2) == 0) { // lesser
+					shouldJump = true;
+				}
+				
+				if((getOpcode() & 0x2) != 0 && (flags & 0x1) != 0) { // equal
+					shouldJump = true;
+				}
 			}
 		}
 		
+		if((getOpcode() & 0x8) != 0) { // not
+			shouldJump = !shouldJump;
+		}
+
 		if(shouldJump) {
 			process.setPc(newPC);
 		}
