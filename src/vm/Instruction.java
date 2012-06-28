@@ -208,7 +208,7 @@ public class Instruction {
 		}
 	}
 	
-	private void load(Process process) {
+	private void load(VM vm, Process process) {
 		
 		int pc = process.getPc();
 		int sp = process.getSp();
@@ -232,6 +232,19 @@ public class Instruction {
 		} else if((getOpcode() &0x40) != 0) { //flags
 			value = process.getFlags();
 			stack[++sp] = value;
+		} else if((getOpcode() &0xB0) != 0) { //access memory share
+			int processID = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
+			memPtr = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
+			
+			Process otherProcess = vm.getProcess(processID);
+			MemoryShare share = otherProcess.getOwnedShares().get(process.getID());
+			byte[] otherMemory = otherProcess.getMemory();
+			
+			int sharedPtr = share.getPtr() + memPtr;
+			if(sharedPtr <= otherMemory.length) {
+				value = otherMemory[sharedPtr];
+				stack[++sp] = value;
+			}
 		} else { 
 			if((getOpcode() & 0x10) != 0) {
 				memPtr =  (memory[pc++] + (memory[pc++] << 8) + (memory[pc++] << 16)  + (memory[pc++] << 24));
@@ -358,13 +371,19 @@ public class Instruction {
 		process.setSp(sp);
 	}
 	
-	private void rpc(VM vm, Process process) {
-		
-		if((getOpcode() & 0x10) != 0) {
-			process.setRunning(false);
-			return;
-		}
-			
+//	signal:		0x1	send signal to processID							0 bytes				4 bytes (processID)
+//	escape: 	0x2 call vm escape function								0 bytes				variable, depending on escape
+//	create: 	0x3 create process, get processID						0 bytes				8 bytes (ptr, size)
+//	destroy: 	0x4 destroy process										0 bytes				4 bytes (processID)
+//	share: 		0x5 share memory at ptr with size, get memory handle    0 bytes				8 bytes (ptr, size)
+//	unshare: 	0x6 unshare memory handle				
+	
+	private void halt(Process process) {
+		process.setRunning(false);
+		return;
+	}
+	
+	private void signal(VM vm, Process process) {
 		int sp = process.getSp();
 		int pc = process.getPc();
 		byte[] stack = process.getStack();
@@ -388,6 +407,66 @@ public class Instruction {
 			
 			int newPc =  (memory[0] + (memory[1] << 8) + (memory[2] << 16)  + (memory[3] << 24));
 			otherProcess.setPc(newPc);
+		}
+	}
+	
+	private void escape(VM vm, Process process) {
+	}
+	
+	private void createProcess(VM vm, Process process) {
+	}
+	
+	private void destroyProcess(VM vm, Process process) {
+	}
+	
+	private void share(VM vm, Process process) {
+		int sp = process.getSp();
+		byte[] stack = process.getStack();
+		
+		int processID = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8) + stack[sp--]);
+		int ptr = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8) + stack[sp--]);
+		int size = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8) + stack[sp--]);
+		
+		MemoryShare share = new MemoryShare(ptr, size);
+		process.getOwnedShares().put(processID, share);
+		
+		process.setSp(sp);
+	}
+	
+	private void unshare(VM vm, Process process) {
+		int sp = process.getSp();
+		byte[] stack = process.getStack();
+		
+		int processID = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8) + stack[sp--]);
+		process.getOwnedShares().remove(processID);
+		
+		process.setSp(sp);
+	}
+	
+	private void rpc(VM vm, Process process) {
+		
+		switch(getOpcode() & 0xF0) {
+		case 0x00:
+			halt(process);
+			return;
+		case 0x10:
+			signal(vm, process);
+			return;
+		case 0x20:
+			escape(vm, process);
+			return;
+		case 0x30:
+			createProcess(vm, process);
+			return;
+		case 0x40:
+			destroyProcess(vm, process);
+			return;
+		case 0x50:
+			share(vm, process);
+			return;
+		case 0x60:
+			unshare(vm, process);
+			return;
 		}
 	}
 	
@@ -431,7 +510,7 @@ public class Instruction {
 			}
 		}
 	}
-	
+
 	public void execute(VM vm, Process process) {
 		switch(getOpcode() & 0x0F) {
 		case 0x00:
@@ -441,7 +520,7 @@ public class Instruction {
 			alu(process);
 			return;
 		case 0x02:
-			load(process);
+			load(vm, process);
 			return;
 		case 0x03:
 			store(process);

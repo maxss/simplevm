@@ -1,5 +1,8 @@
 package vm;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Process {
 	
 	private byte flags;
@@ -9,7 +12,11 @@ public class Process {
 	private int pc;
 	private int sp;
 	
+	private int ID;
+	
 	private boolean running;
+	
+	private Map<Integer, MemoryShare> ownedShares = new TreeMap<Integer, MemoryShare>();
 	
 	public Process(int memorySize, int stackSize) {
 		memory = new byte[memorySize];
@@ -91,5 +98,21 @@ public class Process {
 
 	public void setRunning(boolean running) {
 		this.running = running;
+	}
+
+	public Map<Integer, MemoryShare> getOwnedShares() {
+		return ownedShares;
+	}
+
+	public void setOwnedShares(Map<Integer, MemoryShare> ownedShares) {
+		this.ownedShares = ownedShares;
+	}
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
 	}
 }

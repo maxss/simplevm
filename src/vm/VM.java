@@ -9,6 +9,8 @@ public class VM {
 	Map<Byte, Instruction> instructions = new TreeMap<Byte, Instruction>();
 	ArrayList<Process> processes = new ArrayList<Process>(256);
 	
+	
+	
 	private final static int defaultStackSize = 1024;
 	
 	public VM() {

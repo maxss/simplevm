@@ -46,8 +46,8 @@ load: 0x2
 	stack indirect		0100	0x2		0 bytes					1 byte
 	memory indirect		1100	0x3		0 bytes					4 bytes (ptr)
 	vm flags			0010	0x4		0 bytes					0 bytes
+	share memory ind. 	1101	0xB		0 bytes					8 bytes (processID, ptr)
 	
-
 store: 0x3
 						4567			parameters(inline)		parameters(stack)
 	stack direct		0000	0x0		1 byte					0 bytes
@@ -82,15 +82,21 @@ N = Not
 	jmpnleq				0101	0xA
 
 send: 0x06
-    halt:		0x0
-	signal:		0x1	send signal to processID
-	escape: 	0x2 call vm escape function
-	create: 	0x3 create process, get processID
-	destroy: 	0x4 destroy process
-	share: 		0x5 share memory at ptr with size, get memory handle
-	unshare: 	0x6 unshare memory handle
+																		parameters(inline)	parameters(stack)
+    halt:		0x0														0 bytes				0 bytes
+	signal:		0x1	send signal to processID							1 bytes	(signal) 	4 bytes (processID)
+	escape: 	0x2 call vm escape function								0 bytes				variable, depending on escape
+	create: 	0x3 create process, get processID						0 bytes				8 bytes (ptr, size)
+	destroy: 	0x4 destroy process										0 bytes				4 bytes (processID)
+	share: 		0x5 share memory at ptr with size					    0 bytes				12 bytes (processID, ptr, size)
+	unshare: 	0x6 unshare memory handle								0 bytes				4 bytes (memoryID)
 	
-mem: 0x07
+mem: 0x07												parameters(stack)
+	memsize: 	0x0 get size of process memory			0 bytes
+	memset: 	0x1 set size of process memory			4 bytes (size)
+	stacksize:	0x2 get size of stack memory			0 bytes
+	stackset	0x3 set size of stack memory			4 bytes (size)
+	
 
 Interrupt StackLayout (send):
 0-3: last PC
