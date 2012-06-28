@@ -223,7 +223,8 @@ public class Instruction {
 				memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp]);
 				value = memory[memPtr];
 			} else { //relative stack address
-				value = stack[stack[sp--]];
+				int spvalue = stack[sp--];
+				value = stack[sp - spvalue];
 			}
 			
 			stack[++sp] = value;
@@ -280,7 +281,7 @@ public class Instruction {
 				value = stack[sp--];
 			}
 			
-			stack[stackPtr] = value;
+			stack[sp - stackPtr] = value;
 		}
 		
 		process.setSp(sp);

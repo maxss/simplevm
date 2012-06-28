@@ -7,6 +7,13 @@ public class Start {
 				0x02, 0x01, //load 1 
 				0x02, 0x01, //load 1 
 				0x01,	// add
+				
+				0x02, 0x00, // load 0
+				0x22,       // load stack[sp - stack[sp]]
+				0x02, 0x02, //load 2
+				
+				0x04, //cmp
+
 				0x16}; 	// halt
 		
 		VM vm = new VM();
@@ -19,5 +26,6 @@ public class Start {
 		}
 		
 		System.out.println("1 + 1 = " + process.getStack()[process.getSp()]);
+		System.out.println("flags are: " + process.getFlags() + " (0x1 = ZERO/EQUAL, 0x2 = OVERFLOW/GREATER)");
 	}
 }
