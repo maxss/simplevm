@@ -220,7 +220,7 @@ public class Instruction {
 		
 		if((getOpcode() & 0x20) != 0) { //indirect
 			if((getOpcode() & 0x10) != 0) { //memory address
-				memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp]);
+				memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
 				value = memory[memPtr];
 			} else { //relative stack address
 				int spvalue = stack[sp--];
@@ -260,7 +260,7 @@ public class Instruction {
 		
 		if((getOpcode() & 0x10) != 0) { //target = memory
 			if((getOpcode() & 0x20) != 0) { //indirect 
-				memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp]);
+				memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
 				value = stack[sp--];
 			} else { //direct
 				memPtr =  (memory[pc++] + (memory[pc++] << 8) + (memory[pc++] << 16)  + (memory[pc++] << 24));
@@ -309,6 +309,7 @@ public class Instruction {
 		}
 		
 		process.setFlags(flags);
+		process.setSp(sp);
 	}
 	
 	private void nop(Process process) {
@@ -320,7 +321,7 @@ public class Instruction {
 		byte flags = process.getFlags();
 		byte[] stack = process.getStack();
 		
-		int newPC =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp]);
+		int newPC =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
 		boolean shouldJump = false;
 		
 
@@ -353,6 +354,8 @@ public class Instruction {
 		if(shouldJump) {
 			process.setPc(newPC);
 		}
+		
+		process.setSp(sp);
 	}
 	
 	private void rpc(VM vm, Process process) {
