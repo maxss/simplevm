@@ -5,6 +5,7 @@ public class Instruction {
 	private String name;
 	private byte opcode;
 	private byte parameterLength;
+	private byte stackBytes;
 	
 	public Instruction(String name, byte opcode, byte parameterLength) {
 		this.name = name;
@@ -447,5 +448,13 @@ public class Instruction {
 			mem(process);
 			return;
 		}
+	}
+
+	public byte getStackBytes() {
+		return stackBytes;
+	}
+
+	public void setStackBytes(byte stackBytes) {
+		this.stackBytes = stackBytes;
 	}
 }

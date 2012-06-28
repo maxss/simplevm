@@ -9,6 +9,8 @@ public class VM {
 	Map<Byte, Instruction> instructions = new TreeMap<Byte, Instruction>();
 	ArrayList<Process> processes = new ArrayList<Process>(256);
 	
+	private final static int defaultStackSize = 1024;
+	
 	public VM() {
 		createInstructions();
 	}
@@ -72,7 +74,7 @@ public class VM {
 		instructions.put(instruction.getOpcode(), instruction);
 
 		
-		instruction = new Instruction("stores", (byte)0x03, (byte)2);
+		instruction = new Instruction("stores", (byte)0x03, (byte)1);
 		instructions.put(instruction.getOpcode(), instruction);
 		
 		instruction = new Instruction("storem", (byte)0x13, (byte)4);
@@ -145,5 +147,15 @@ public class VM {
 		process.setPc(pc);
 		
 		return instructions.get(opcode);
+	}
+	
+	public int createProcess(byte[] memoryImage) {
+		Process process = new Process(memoryImage.length, defaultStackSize);
+		
+		System.arraycopy(memoryImage, 0, process.getMemory(), 0, memoryImage.length);
+		
+		processes.add(process);
+		
+		return processes.size();
 	}
 }
