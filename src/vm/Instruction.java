@@ -184,25 +184,25 @@ public class Instruction {
 		case 0x00:
 			add(process);
 			return;
-		case 0x01:
+		case 0x10:
 			sub(process);
 			return;
-		case 0x02:
+		case 0x20:
 			mul(process);
 			return;
-		case 0x03:
+		case 0x30:
 			div(process);
 			return;
-		case 0x04:
+		case 0x40:
 			or(process);
 			return;
-		case 0x05:
+		case 0x50:
 			not(process);
 			return;
-		case 0x06:
+		case 0x60:
 			and(process);
 			return;
-		case 0x07:
+		case 0x70:
 			xor(process);
 			return;
 		}
