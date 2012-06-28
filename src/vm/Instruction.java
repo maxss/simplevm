@@ -356,7 +356,7 @@ public class Instruction {
 	
 	private void rpc(VM vm, Process process) {
 		
-		if((getOpcode() & 0x1) != 0) {
+		if((getOpcode() & 0x10) != 0) {
 			process.setRunning(false);
 			return;
 		}
