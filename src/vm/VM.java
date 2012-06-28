@@ -104,7 +104,7 @@ public class VM {
 		instruction = new Instruction("jmpz", (byte)0x35, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("jmpnz", (byte)0xD5, (byte)0);
+		instruction = new Instruction("jmpnz", (byte)0xB5, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
 		instruction = new Instruction("jmpgt", (byte)0x45, (byte)0);

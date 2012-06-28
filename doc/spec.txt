@@ -73,7 +73,7 @@ N = Not
 	jmp					1000	0x1
 		
 	jmpz				1100	0x3
-	jmpnz				1101	0xD
+	jmpnz				1101	0xB
 	
 	jmpgt				0010	0x4
 	jmpl				0011	0xC
