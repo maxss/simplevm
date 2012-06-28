@@ -3,8 +3,9 @@ Memory Format: little endian
 Operation Type: stack machine
 
 Addressing Modes:
-stack direct: a index into the stack relative to the current sp
-memory direct: a index into the memory
+direct: the value is part of the command
+stack direct: an index into the stack relative to the current sp
+memory direct: an index into the memory
 stack indirect: the current byte on the stack is used as relative index into the stack
 memory indirect: the current 4 bytes on the stack are used as index into memory 
 
@@ -55,6 +56,8 @@ store:
 cmp: 0x04
 
 jmp: 0x05
+parameters(stack): always 4 bytes (ptr)
+
 M = Mode	(0 = combined mode - the G and E conditions have to be true at the same time)
 			(1 = independend mode - only the E condition is evaluated)
 E = Equal
