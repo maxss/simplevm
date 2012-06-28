@@ -14,9 +14,10 @@ public class Start {
 		int processID = vm.createProcess(instructions);
 		Process process = vm.getProcess(processID);
 			
-			
 		while(process.isRunning()) {
 			vm.iterate();
 		}
+		
+		System.out.println("1 + 1 = " + process.getStack()[process.getSp()]);
 	}
 }
