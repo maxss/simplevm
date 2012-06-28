@@ -82,12 +82,13 @@ N = Not
 	jmpnleq				0101	0xA
 
 send: 0x06
-	signal:		0x0	send signal to processID
-	escape: 	0x1 call vm escape function
-	create: 	0x2 create process, get processID
-	destroy: 	0x3 destroy process
-	share: 		0x4 share memory at ptr with size, get memory handle
-	unshare: 	0x5 unshare memory handle
+    halt:		0x0
+	signal:		0x1	send signal to processID
+	escape: 	0x2 call vm escape function
+	create: 	0x3 create process, get processID
+	destroy: 	0x4 destroy process
+	share: 		0x5 share memory at ptr with size, get memory handle
+	unshare: 	0x6 unshare memory handle
 	
 mem: 0x07
 

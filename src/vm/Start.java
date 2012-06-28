@@ -25,9 +25,9 @@ public class Start {
 		
 		byte[] instructions = 
 			{0x00, 0x00, 0x00, 0x00, 				//0-3:  4-bytes header 
-				0x02, 0x01, 						//4-5:   load 1
+				0x02, 0x02, 						//4-5:   load 1
 				0x02, 0x01, 						//6-7:   load 1 
-				0x11,	    						//8:     sub
+				0x71,	    						//8:     sub
 				0x16}; 								//20:    halt
 		
 		VM vm = new VM();
