@@ -17,8 +17,10 @@ public class VM {
 	
 	public void iterate() {
 		for(Process process : processes) {
-			Instruction i = selectInstruction(process);
-			i.execute(this, process);
+			if(process.isRunning()) {
+				Instruction i = selectInstruction(process);
+				i.execute(this, process);
+			}
 		}
 	}
 	
@@ -125,6 +127,10 @@ public class VM {
 		instruction = new Instruction("send", (byte)0x06, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
+		instruction = new Instruction("halt", (byte)0x16, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
+		
+		
 		
 		instruction = new Instruction("memsize", (byte)0x07, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
@@ -156,6 +162,6 @@ public class VM {
 		
 		processes.add(process);
 		
-		return processes.size();
+		return processes.size() - 1;
 	}
 }

@@ -356,6 +356,11 @@ public class Instruction {
 	
 	private void rpc(VM vm, Process process) {
 		
+		if((getOpcode() & 0x1) != 0) {
+			process.setRunning(false);
+			return;
+		}
+			
 		int sp = process.getSp();
 		int pc = process.getPc();
 		byte[] stack = process.getStack();
@@ -427,8 +432,10 @@ public class Instruction {
 		switch(getOpcode() & 0x0F) {
 		case 0x00:
 			nop(process);
+			return;
 		case 0x01:
 			alu(process);
+			return;
 		case 0x02:
 			load(process);
 			return;

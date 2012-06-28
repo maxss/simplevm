@@ -9,9 +9,14 @@ public class Process {
 	private int pc;
 	private int sp;
 	
+	private boolean running;
+	
 	public Process(int memorySize, int stackSize) {
 		memory = new byte[memorySize];
 		stack = new byte[stackSize];
+		
+		setRunning(true);
+		setPc(4);
 	}
 	
 	public byte[] getMemory() {
@@ -78,5 +83,13 @@ public class Process {
 		System.arraycopy(stack, 0, newMem, 0, length);
 		
 		this.stack = newMem;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 }
