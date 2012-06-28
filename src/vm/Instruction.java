@@ -324,29 +324,29 @@ public class Instruction {
 		boolean shouldJump = false;
 		
 
-		if((getOpcode() & 0xF) == 0x1) { // unconditional jump
+		if((getOpcode() & 0xF0) == 0x1) { // unconditional jump
 			shouldJump = true;
 		} else {
-			if((getOpcode() & 0x1) != 0) {	// conditional jump - equal only
-				if((getOpcode() & 0x2) != 0 && (flags & 0x1) != 0) {
+			if((getOpcode() & 0x10) != 0) {	// conditional jump - equal only
+				if((getOpcode() & 0x20) != 0 && (flags & 0x1) != 0) {
 					shouldJump = true;
 				}
 			} else {	// conditional jump - combined equal and overflow flag
-				if((getOpcode() & 0x4) != 0 && (flags & 0x2) != 0) { // greater
+				if((getOpcode() & 0x40) != 0 && (flags & 0x2) != 0) { // greater
 					shouldJump = true;
 				}
 				
-				if((getOpcode() & 0x4) == 0 && (flags & 0x2) == 0) { // lesser
+				if((getOpcode() & 0x40) == 0 && (flags & 0x2) == 0) { // lesser
 					shouldJump = true;
 				}
 				
-				if((getOpcode() & 0x2) != 0 && (flags & 0x1) != 0) { // equal
+				if((getOpcode() & 0x20) != 0 && (flags & 0x1) != 0) { // equal
 					shouldJump = true;
 				}
 			}
 		}
 		
-		if((getOpcode() & 0x8) != 0) { // not
+		if((getOpcode() & 0x80) != 0) { // not
 			shouldJump = !shouldJump;
 		}
 
@@ -393,7 +393,7 @@ public class Instruction {
 		if((getOpcode() & 0x10) == 0) { //get size
 			int size = 0;
 			
-			if((getOpcode() & 0x2) == 1) { //stack
+			if((getOpcode() & 0x20) == 1) { //stack
 				size = process.getStackSize();
 			} else {
 				size = process.getMemSize();
@@ -421,7 +421,7 @@ public class Instruction {
 			
 			process.setSp(sp);
 			
-			if((getOpcode() & 0x2) == 1) { //stack
+			if((getOpcode() & 0x20) == 1) { //stack
 				process.setStackSize(size);
 			} else {
 				process.setMemSize(size);
