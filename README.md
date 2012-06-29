@@ -1,7 +1,7 @@
 SimpleVM
 ========
 
-This will be an experiment on how to have fine grained virtualization within a Virtual Machine.
+This will be an experiment on how to have fine grained virtualization within a Virtual Machine. It is all not very well tested. Just looking to get some kind of proof of concept.
 
 The current revision is released under BSD Licence. This may change once I got the time to think about this.
 

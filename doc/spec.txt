@@ -38,7 +38,7 @@ alu: 0x01								parameters (stack)
 	and	0x6								2 bytes
 	xor	0x7								2 bytes
 	
-load: 0x2
+load: 0x02
 
 						4567			parameters(inline)		parameters(stack)
 	direct				0000	0x0		1 byte					0 bytes

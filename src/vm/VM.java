@@ -76,6 +76,9 @@ public class VM {
 		
 		instruction = new Instruction("loadf", (byte)0x42, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
+		
+		instruction = new Instruction("loadshare", (byte)0xB2, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
 
 		
 		instruction = new Instruction("stores", (byte)0x03, (byte)1);
@@ -124,12 +127,27 @@ public class VM {
 		instruction = new Instruction("jmpnleq", (byte)0xA5, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
+
 		
-		
-		instruction = new Instruction("send", (byte)0x06, (byte)0);
+		instruction = new Instruction("halt", (byte)0x06, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
-		instruction = new Instruction("halt", (byte)0x16, (byte)0);
+		instruction = new Instruction("signal", (byte)0x16, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
+		
+		instruction = new Instruction("escape", (byte)0x26, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
+		
+		instruction = new Instruction("create", (byte)0x36, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
+		
+		instruction = new Instruction("destroy", (byte)0x46, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
+		
+		instruction = new Instruction("share", (byte)0x56, (byte)0);
+		instructions.put(instruction.getOpcode(), instruction);
+		
+		instruction = new Instruction("unshare", (byte)0x66, (byte)0);
 		instructions.put(instruction.getOpcode(), instruction);
 		
 		
@@ -164,6 +182,10 @@ public class VM {
 		
 		processes.add(process);
 		
-		return processes.size() - 1;
+		int processID = processes.size() - 1;
+		
+		process.setID(processID);
+		
+		return processID;
 	}
 }

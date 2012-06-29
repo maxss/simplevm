@@ -220,8 +220,23 @@ public class Instruction {
 		
 		if((getOpcode() & 0x20) != 0) { //indirect
 			if((getOpcode() & 0x10) != 0) { //memory address
-				memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
-				value = memory[memPtr];
+				if((getOpcode() &0xB0) != 0) { //access memory share
+					int processID = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
+					memPtr = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
+					
+					Process otherProcess = vm.getProcess(processID);
+					MemoryShare share = otherProcess.getOwnedShares().get(process.getID());
+					byte[] otherMemory = otherProcess.getMemory();
+					
+					int sharedPtr = share.getPtr() + memPtr;
+					if(sharedPtr <= otherMemory.length) {
+						value = otherMemory[sharedPtr];
+						stack[++sp] = value;
+					}
+				} else { // access local memory
+					memPtr =  ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
+					value = memory[memPtr];	
+				}
 			} else { //relative stack address
 				int spvalue = stack[sp--];
 				value = stack[sp - spvalue];
@@ -232,19 +247,6 @@ public class Instruction {
 		} else if((getOpcode() &0x40) != 0) { //flags
 			value = process.getFlags();
 			stack[++sp] = value;
-		} else if((getOpcode() &0xB0) != 0) { //access memory share
-			int processID = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
-			memPtr = ((stack[sp--] << 24) + (stack[sp--] << 16) + (stack[sp--] << 8)  + stack[sp--]);
-			
-			Process otherProcess = vm.getProcess(processID);
-			MemoryShare share = otherProcess.getOwnedShares().get(process.getID());
-			byte[] otherMemory = otherProcess.getMemory();
-			
-			int sharedPtr = share.getPtr() + memPtr;
-			if(sharedPtr <= otherMemory.length) {
-				value = otherMemory[sharedPtr];
-				stack[++sp] = value;
-			}
 		} else { 
 			if((getOpcode() & 0x10) != 0) {
 				memPtr =  (memory[pc++] + (memory[pc++] << 8) + (memory[pc++] << 16)  + (memory[pc++] << 24));
